@@ -10,8 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_17_055623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.string "role"
+    t.bigint "story_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["story_id"], name: "index_messages_on_story_id"
+  end
+
+  create_table "stories", force: :cascade do |t|
+    t.string "protagonist_name"
+    t.string "protagonist_description"
+    t.string "genre"
+    t.string "topic"
+    t.text "assessment"
+    t.text "system_prompt"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_stories_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "messages", "stories"
+  add_foreign_key "stories", "users"
 end
