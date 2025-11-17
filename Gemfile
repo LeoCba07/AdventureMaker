@@ -73,4 +73,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
+# Custom gems
+gem "devise"
+gem "ostruct"
 gem "cloudinary"
