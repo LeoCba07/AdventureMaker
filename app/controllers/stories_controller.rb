@@ -25,3 +25,6 @@ end
       :protagonist_image
     )
   end
+  def assessment
+  end
+end

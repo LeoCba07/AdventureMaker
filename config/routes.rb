@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Custom routes
-  resources :stories, only: [:new, :show, :create, :index] do
-    resources :messages, only: [:create]
+  resources :stories, only: [:new, :create, :index] do
+    resources :chats, only: [:create, :show]
+
+    member do
+      get :assessment
+    end
   end
 end
