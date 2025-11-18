@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   # Custom routes
   resources :stories, only: [:new, :create, :index] do
-    resources :chat, only: [:create, :show]
+    resources :chats, only: [:create, :show]
 
     member do
       get :assessment
