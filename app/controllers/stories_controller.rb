@@ -10,7 +10,9 @@ class StoriesController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-end
+
+  def assessment
+  end
 
   private
 
@@ -24,7 +26,5 @@ end
       :system_prompt,
       :protagonist_image
     )
-  end
-  def assessment
   end
 end
