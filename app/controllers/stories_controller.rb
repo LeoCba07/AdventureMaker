@@ -17,6 +17,7 @@ class StoriesController < ApplicationController
   end
 
   def assessment
+    @story = current_user.stories.find(params[:id])
   end
 
   private

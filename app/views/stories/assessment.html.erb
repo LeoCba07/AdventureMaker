@@ -1,14 +1,34 @@
-<div class="assessment-page">
-  <!-- Story header for protagonist name, genre, topic, some kind of picture -->
+<div class="assessment-page container">
+  <!-- Header for protagonist name, story title generated based on protagonist name, genre, topic -->
   <div class="story-header">
+    <h1 class="story-title"> Story Title </h1>
+    <div class="story-info">
+      <p>Topic: <% @story.topic %></p>
+      <p>Genre: <% @story.genre %></p>
+    </div>
   </div>
-  <!-- Story content with messages, user replies, continuation of story, then ending -->
-  <div class="story-content">
+  <!-- Story ending generated picture -->
+  <div class="story-picture">
+    <p> Image here </p>
   </div>
-  <!-- Psychological assessment results -->
-  <div class="assessment-results">
-  </div>
-  <!-- Possible next navigation actions (play again, see all my stories) -->
-  <div class="actions">
+  <!-- Story narration with messages, user replies, continuation of story and ending -->
+  <div class="story-narration">
+    <div class="story-narration">
+      <% @story.messages.order(:created_at).each do |message| %>
+        <% if message.role == 'assistant' %>
+          <p class="narrative-text"><%= message.content %></p>
+        <% else %>
+          <p class="user-choice">
+            <strong>You chose:</strong> <em><%= message.content %></em>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+    <!-- Psychological assessment results -->
+    <div class="assessment-results">
+    </div>
+    <!-- Possible next navigation actions (play again, see all my stories) -->
+    <div class="actions">
+    </div>
   </div>
 </div>
