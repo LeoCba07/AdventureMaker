@@ -1,15 +1,15 @@
-<div class="assessment-page">
+<div class="assessment-page container">
   <!-- Header for protagonist name, story title generated based on protagonist name, genre, topic -->
   <div class="story-header">
-    <h1 class="story-title"><%= story.title %></h1>
+    <h1 class="story-title"><%= @story.title %></h1>
     <div class="story-info">
-      <p>Topic: <% story.topic %></p>
-      <p>Genre: <% story.genre %></p>
+      <p>Topic: <% @story.topic %></p>
+      <p>Genre: <% @story.genre %></p>
     </div>
   </div>
   <!-- Story ending generated picture -->
   <div class="story-picture">
-    <%= image_tag story.picture %>
+    <%= image_tag @story.picture %>
   </div>
   <!-- Story narration with messages, user replies, continuation of story and ending -->
   <div class="story-narration">
