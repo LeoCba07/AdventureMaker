@@ -9,9 +9,16 @@ SYSTEM_PROMPT = "You are a master fantasy adventure storyteller who continues an
     @message.chat = @chat
     @message.role = 'user'
     if @message.save
-      # ruby_llm_chat = RubyLLM.chat
-      response = @chat.with_instructions(instructions).ask(@message.content)
-      Message.create(role: "assistant", content: response.content, chat: @chat)
+      ruby_llm_chat = RubyLLM.chat
+      response = ruby_llm_chat.with_instructions(instructions).ask(@message.content)
+      message = Message.create(role: "assistant", content: response.content, chat: @chat)
+
+      # image generation
+      chat = RubyLLM.chat(model: "gemini-2.5-flash-image")
+      reply = chat.ask(response.content)
+      image = reply.content[:attachments][0].source
+      message.attachments.attach(io: image, filename: "#.png", content_type: "image/png")
+      message.save
 
       redirect_to chat_path(@chat)
     else
