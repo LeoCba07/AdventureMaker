@@ -10,7 +10,6 @@ respond with one short paragraph (3-6 sentences) that immersively describes the 
     @message.chat = @chat
     @message.role = 'user'
 
-
     if @message.save
       user_message_count = @chat.messages.where(role: 'user').count
       if user_message_count > 5
