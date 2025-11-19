@@ -37,11 +37,8 @@ class StoriesController < ApplicationController
       # Generate the final story conclusion
       story_ending_prompt = "You are a master storyteller concluding an interactive narrative. " \
                           "Based on the user's final action, write a dramatic ending to their story. " \
-                          "Make it feel final and complete. 2-3 sentences maximum.\n\n" \
-                          "Full story context:\n" \
-                          "#{@chat.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n\n")}\n\n" \
-                          "User's final action: #{last_user_message&.content}\n\n" \
-                          "Write the ultimate conclusion to their #{@story.genre} story, with #{@story.topic} topic adventure."
+                          "Make it feel final and complete. 2-3 sentences maximum." \
+                          "Write the ultimate conclusion to their story."
 
       story_chat = RubyLLM.chat
       final_story_content = story_chat.ask(story_ending_prompt).content
@@ -53,11 +50,8 @@ class StoriesController < ApplicationController
       chat: @chat
       )
 
-      image_prompt = "Generate a dramatic, cinematic final scene for this #{@story.genre} story that captures the ENTIRE journey. " \
-                     "Protagonist: #{@story.protagonist_name} (#{@story.protagonist_description}). " \
-                     "Topic: #{@story.topic}.\n\n" \
-                     "Full story journey:\n" \
-                      "#{@chat.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n\n")}\n\n" \
+      # Generate the final image
+      image_prompt = "Generate a dramatic, cinematic final scene for this story that captures the ENTIRE journey. " \
                      "Create an image that shows the culmination of their adventure - include visual callbacks to key moments " \
                      "from their journey, the protagonist's transformation, and the final outcome. The composition should tell " \
                      "the story of where they started, what they went through, and how it all ended. Make it epic, emotionally " \
@@ -73,9 +67,7 @@ class StoriesController < ApplicationController
 
       # Prompt with line jumps for easier readability including the conversation
       assessment_prompt = "You're a therapist who is TIRED and barely hiding your judgment. Analyze their story choices " \
-                        "with thinly-veiled sarcasm and backhanded compliments.\n\n" \
-                        "Full story journey:\n" \
-                        "#{@chat.messages.order(:created_at).map { |m| "#{m.role}: #{m.content}" }.join("\n\n")}\n\n" \
+                        "with thinly-veiled sarcasm and backhanded compliments." \
                         "Start with 'Well, that was... certainly a choice.' Use phrases like 'bless your heart', " \
                         "'interesting approach', and 'I'm sure that made sense to YOU'. One paragraph of polite savagery " \
                         "disguised as professional assessment. Stay passive-aggressive throughout."
