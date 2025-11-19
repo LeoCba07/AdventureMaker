@@ -3,8 +3,8 @@
   <div class="story-header">
     <h1 class="story-title"> Story Title </h1>
     <div class="story-info">
-      <p>Topic: <% @story.topic %></p>
-      <p>Genre: <% @story.genre %></p>
+      <p>Topic: <%= @story.topic %></p>
+      <p>Genre: <%= @story.genre %></p>
     </div>
   </div>
   <!-- Story ending generated picture -->
@@ -13,7 +13,7 @@
   </div>
   <!-- Story narration with messages, user replies, continuation of story and ending -->
   <div class="story-narration">
-    <div class="story-narration">
+    <div class="story-content">
       <% @story.messages.order(:created_at).each do |message| %>
         <% if message.role == 'assistant' %>
           <p class="narrative-text"><%= message.content %></p>
@@ -24,11 +24,12 @@
         <% end %>
       <% end %>
     </div>
-    <!-- Psychological assessment results -->
-    <div class="assessment-results">
-    </div>
-    <!-- Possible next navigation actions (play again, see all my stories) -->
-    <div class="actions">
-    </div>
+  </div>
+  <!-- Psychological assessment results -->
+  <div class="assessment-results">
+  </div>
+  <!-- Possible next navigation actions (play again, see all my stories) -->
+  <div class="actions">
   </div>
 </div>
+<!-- Render partials -->
