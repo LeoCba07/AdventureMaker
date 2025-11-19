@@ -17,6 +17,12 @@ class StoriesController < ApplicationController
       @story_start= @chat.ask("You are a master storyteller. You are creating a the setting for a new story.The genre is #{@story.genre} and the context is #{@story.topic}. The player's character's name is #{@story.protagonist_name} and his detailed description is #{@story.protagonist_description}. Create an initial setup that places the protagonist in this new world. This should only be one short paragraph long and not end in a question")
       # Message.create(role: "assistant", content: @story_start, chat: @chat)
       # @chat.messages.create!(role: "system", content: @story_start)
+      @message = Message.last
+      image_chat = RubyLLM.chat(model: "gemini-2.5-flash-image")
+      reply = image_chat.ask("Generate an image based on this text #{@message.content}")
+      image = reply.content[:attachments][0].source
+      @message.image.attach(io: image, filename: "#.png", content_type: "image/png")
+      @message.save
       redirect_to chat_path(@chat), notice: "A new story has begun!"
     else
       render :new, status: :unprocessable_entity
