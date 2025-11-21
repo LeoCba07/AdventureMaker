@@ -5,33 +5,34 @@ respond with one short paragraph (3-6 sentences) that immersively describes the 
 
   def create
     # @story = current_user.stories.find(params[:story_id])
-    begin
-      @chat  = Chat.find(params[:chat_id])
-      @message = Message.new(message_params)
-      @message.chat = @chat
-      @message.role = 'user'
+    @chat  = Chat.find(params[:chat_id])
+    @message = Message.new(message_params)
+    @message.chat = @chat
+    @message.role = 'user'
+    @user_message_count = @chat.messages.where(role: 'user').count
 
-      if @message.valid?
+    if @message.valid?
+      begin
         response = @chat.with_instructions(instructions).ask(@message.content)
-        @user_message_count = @chat.messages.where(role: 'user').count
         @last_assistant_message = @chat.messages.where(role: "assistant").order(:created_at).last
 
         if @user_message_count > 4
           redirect_to assessment_story_path(@chat.story), notice: 'Your adventure has concluded! Time for you personality assessment!'
-          return
         end
+
         # image generation
         ImageGeneratorJob.perform_later(@chat, @last_assistant_message)
         redirect_to chat_path(@chat)
+
       rescue RubyLLM::Error => e
-          Rails.logger.error "LLM Error: #{e.message}"
-          @message.destroy  # Delete the failed message so user can retry
-          redirect_to chat_path(@chat), alert: 'The storyteller is currently overwhelmed. Please try again in a moment.'
+        Rails.logger.error "LLM Error: #{e.message}"
+        @chat.messages.order(:created_at).where(role: 'user').last.destroy
+        redirect_to chat_path(@chat), notice: 'The storyteller is currently overwhelmed. Please try again in a moment.'
       end
+
     else
       render chat_path(@chat), status: :unprocessable_entity
     end
-
   end
 
   private
@@ -47,5 +48,4 @@ respond with one short paragraph (3-6 sentences) that immersively describes the 
   def instructions
     [SYSTEM_PROMPT].compact.join("\n\n")
   end
-
 end
