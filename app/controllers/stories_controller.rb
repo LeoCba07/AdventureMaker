@@ -65,8 +65,6 @@ class StoriesController < ApplicationController
 
     # Execute ONLY if story.assessment is blank
     if @story.assessment.blank?
-      # Get the last user message to generate the conclusion
-      last_user_message = @chat.messages.where(role: 'user').last
 
       # Generate the final story conclusion
       story_ending_prompt = "Write a dramatic 2-3 sentence conclusion to this story based on the user's final choice: '#{last_user_message.content}' " \
