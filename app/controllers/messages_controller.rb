@@ -11,21 +11,27 @@ respond with one short paragraph (3-6 sentences) that immersively describes the 
     @message.role = 'user'
 
     if @message.valid?
-      response = @chat.with_instructions(instructions).ask(@message.content)
-      @user_message_count = @chat.messages.where(role: 'user').count
+      begin
+        response = @chat.with_instructions(instructions).ask(@message.content)
+        @user_message_count = @chat.messages.where(role: 'user').count
 
-      if @user_message_count > 4
-        redirect_to assessment_story_path(@chat.story), notice: 'Your adventure has concluded! Time for you personality assessment!'
-      else
-        # image generation
-        image_chat = RubyLLM.chat(model: "gemini-2.5-flash-image")
-        reply = image_chat.ask("Generate an image based on this text #{response.content} and use the attached picture of the protagonist", with: { image: @chat.story.protagonist_image.url })
-        image = reply.content[:attachments][0].source
-        @last_user_message = @chat.messages.last
-        @last_user_message.image.attach(io: image, filename: "#.png", content_type: "image/png")
-        @last_user_message.save
+        if @user_message_count > 4
+          redirect_to assessment_story_path(@chat.story), notice: 'Your adventure has concluded! Time for you personality assessment!'
+        else
+          # image generation
+          image_chat = RubyLLM.chat(model: "gemini-2.5-flash-image")
+          reply = image_chat.ask("Generate an image based on this text #{response.content} and use the attached picture of the protagonist", with: { image: @chat.story.protagonist_image.url })
+          image = reply.content[:attachments][0].source
+          @last_user_message = @chat.messages.last
+          @last_user_message.image.attach(io: image, filename: "#.png", content_type: "image/png")
+          @last_user_message.save
 
-        redirect_to chat_path(@chat)
+          redirect_to chat_path(@chat)
+        end
+      rescue RubyLLM::Error => e
+          Rails.logger.error "LLM Error: #{e.message}"
+          @message.destroy  # Delete the failed message so user can retry
+          redirect_to chat_path(@chat), alert: 'The storyteller is currently overwhelmed. Please try again in a moment.'
       end
     else
       render chat_path(@chat), status: :unprocessable_entity
