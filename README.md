@@ -6,9 +6,13 @@ An AI-powered interactive storytelling platform where your choices shape the nar
 
 ## Screenshots
 
-| Landing Page | Story Screen | Assessment |
-|:---:|:---:|:---:|
-| <img src="app/assets/screenshots/adventure-maker-1.png" width="250"> | <img src="app/assets/screenshots/adventure-maker-2.png" width="250"> | <img src="app/assets/screenshots/adventure-maker-3.png" width="250"> |
+<p align="center">
+  <img src="app/assets/screenshots/adventure-maker-1.png" width="600" alt="Landing Page">
+</p>
+<p align="center">
+  <img src="app/assets/screenshots/adventure-maker-2.png" height="300" alt="Story Screen">&nbsp;&nbsp;
+  <img src="app/assets/screenshots/adventure-maker-3.png" height="300" alt="Assessment">
+</p>
 
 ## The Problem
 
